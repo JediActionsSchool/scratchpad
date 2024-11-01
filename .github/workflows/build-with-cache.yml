@@ -17,12 +17,15 @@ jobs:
 
       - name: Restore from Cache
         id: cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.npm
           key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-npm-
+
+      - name: Change Directory
+        run: cd ~/app
 
       - name: Use Node.js Latest
         uses: actions/setup-node@v3
