@@ -26,8 +26,10 @@ jobs:
 
       - name: List Directory
         run: |
+          echo "--- Home directory listing ---"
           ls -la
           cd app
+          echo "--- App directory listing ---"
           ls -la
 
       - name: Use Node.js Latest
