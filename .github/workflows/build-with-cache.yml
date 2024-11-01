@@ -5,50 +5,52 @@ name: Node.js CI - WITH CACHE
 
 on:
   workflow_dispatch:
+    inputs:
+      use-cache:
+        description: Whether to execute cache step
+        type: boolean
+        default: true
+      node-version:
+        description: Node version
+        type: choice
+        options:
+          - 18.x
+          - 20.x
+          - 21.x
+        default: latest
+
   push:
 
 jobs:
-  build:
+  install-dependencies:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Restore from Cache
-        id: cache
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-npm-
-
-      - name: List Directory
-        run: |
-          echo "--- Home directory listing ---"
-          ls -la
-          cd app
-          echo "--- App directory listing ---"
-          ls -la
-
-      - name: Use Node.js Latest
+      - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: latest
+          node-version: ${{ inputs.node-version }}
 
-      - name: Run Build
+      - name: Calculate Cache Key
+        id: cache-key
         run: |
-          cd app
-          npm ci
+          echo "CACHE_KEY=deps-node-modules-${{ hashFiles('app/package-lock.json')}}" >> $GITHUB_OUTPUT
+          echo "CACHE_KEY=deps-node-modules-${{ hashFiles('app/package-lock.json')}}" >> $GITHUB_STEP_SUMMARY
 
-      - name: Npm Build
-        run: |
-          cd app
-          npm run build --if-present
-
-      - name: Save Cache Npm
-        if: steps.cache.outputs.cache-hit != 'true'
-        uses: actions/cache@v4
+      - name: Restore from Cached Dependencies
+        id: cache
+        uses: actions/cache@v3
+        if: ${{ inputs.use-cache }}
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          path: app/node_modules
+          key: ${{ steps.cache-key.outputs.CACHE_KEY }}
+
+      - name: Install Dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci
