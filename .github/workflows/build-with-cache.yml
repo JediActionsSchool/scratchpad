@@ -27,19 +27,17 @@ jobs:
       - name: List Directory
         run: |
           ls -la
-      
-      - name: Change Directory
-        run: |
           cd app
+          ls -la
 
       - name: Use Node.js Latest
         uses: actions/setup-node@v3
         with:
           node-version: latest
-          cache: "npm"
 
       - name: Run Build
         run: |
+          cd app
           npm ci
 
       - name: Npm Build
