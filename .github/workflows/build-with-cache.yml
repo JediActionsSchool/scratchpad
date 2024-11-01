@@ -14,9 +14,11 @@ on:
         description: Node version
         type: choice
         options:
+          - 14.x
           - 18.x
           - 20.x
           - 21.x
+          - latest
         default: latest
 
   push:
@@ -24,9 +26,13 @@ on:
 jobs:
   install-dependencies:
     runs-on: ubuntu-latest
+
     defaults:
       run:
         working-directory: app
+
+    outputs:
+      deps-cache-key: ${{ steps.cache-key.outputs.CACHE_KEY}}
 
     steps:
       - name: Checkout Code
@@ -40,8 +46,8 @@ jobs:
       - name: Calculate Cache Key
         id: cache-key
         run: |
-          echo "CACHE_KEY=deps-node-modules-${{ hashFiles('app/package-lock.json')}}" >> $GITHUB_OUTPUT
-          echo "CACHE_KEY=deps-node-modules-${{ hashFiles('app/package-lock.json')}}" >> $GITHUB_STEP_SUMMARY
+          echo "CACHE_KEY=${{ runner.os }}-npm-${{ hashFiles('app/package-lock.json')}}" >> $GITHUB_OUTPUT
+          echo "CACHE_KEY=${{ runner.os }}-npm-${{ hashFiles('app/package-lock.json')}}" >> $GITHUB_STEP_SUMMARY
 
       - name: Restore from Cached Dependencies
         id: cache
@@ -54,3 +60,60 @@ jobs:
       - name: Install Dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
+
+  lint-test:
+    runs-on: ubuntu-latest
+    needs: install-dependencies
+    defaults:
+      run:
+        working-directory: app
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ inputs.node-version }}
+
+      - name: Restore from Cached Dependencies
+        id: cache
+        uses: actions/cache@v3
+        if: ${{ inputs.use-cache }}
+        with:
+          path: app/node_modules
+          key: ${{ needs.install-dependencies.outputs.deps-cache-key }}
+
+      - name: Testing
+        run: npm run test
+
+      - name: Linting
+        run: echo "Linting..."
+
+  build:
+    runs-on: ubuntu-latest
+    needs: install-dependencies
+    defaults:
+      run:
+        working-directory: app
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ inputs.node-version }}
+
+      - name: Restore from Cached Dependencies
+        id: cache
+        uses: actions/cache@v3
+        if: ${{ inputs.use-cache }}
+        with:
+          path: app/node_modules
+          key: ${{ needs.install-dependencies.outputs.deps-cache-key }}
+
+      - name: Building
+        run: npm run build
