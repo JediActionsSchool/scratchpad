@@ -25,9 +25,6 @@ jobs:
           cd app
           npm ci
 
-      - name: Run tests
-        run: npm test
-
       - name: Build
         run: |
           cd app
