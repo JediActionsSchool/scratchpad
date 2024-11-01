@@ -27,7 +27,7 @@ jobs:
 
       - name: Run tests
         run: |
-          cd app
+          cd app/test
           npm test
 
       - name: Build
