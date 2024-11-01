@@ -24,9 +24,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-npm-
 
-      - name: Change Directory
+      - name: List Directory
         run: |
           ls -la
+      
+      - name: Change Directory
+        run: |
           cd app
 
       - name: Use Node.js Latest
