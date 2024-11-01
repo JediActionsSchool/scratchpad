@@ -25,7 +25,9 @@ jobs:
           cache: "npm"
 
       - name: Install Dependencies
-        run: cd app && npm ci
+        run: | 
+          cd app
+          npm ci
 
       - name: Run Tests
         run: cd app && npm test
