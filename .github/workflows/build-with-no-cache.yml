@@ -18,7 +18,7 @@ jobs:
       - name: Use Node.js Latest
         uses: actions/setup-node@v3
         with:
-          node-version: latest
+          node-version: 14.x
           cache: 'npm'
 
       - name: Install Dependencies
