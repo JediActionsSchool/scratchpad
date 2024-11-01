@@ -32,7 +32,6 @@ jobs:
 
       - name: Run Build
         run: |
-          cd app
           npm ci
 
       - name: Npm Build
