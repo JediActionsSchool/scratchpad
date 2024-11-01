@@ -18,9 +18,8 @@ jobs:
       - name: Use Node.js Latest
         uses: actions/setup-node@v3
         with:
-          node-version: 14.x
+          node-version: latest
           cache: "npm"
-        
 
       - name: Install dependencies
         run: |
@@ -31,7 +30,7 @@ jobs:
         run: |
           cd app
           npm test
-          
+
       - name: Build
         run: |
           cd app
