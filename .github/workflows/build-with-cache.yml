@@ -25,7 +25,9 @@ jobs:
             ${{ runner.os }}-npm-
 
       - name: Change Directory
-        run: cd ~/app
+        run: |
+          ls -la
+          cd app
 
       - name: Use Node.js Latest
         uses: actions/setup-node@v3
