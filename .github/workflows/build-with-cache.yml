@@ -1,8 +1,7 @@
 name: Node.js CI - WITH CACHE
 
-# Cache mekanizmasi olmaksizin calistirilan build isleminde, her seferinde node_modules klasoru silinir
-# ve npm ci komutu ile node_modules klasoru yeniden olusturulur. Dolayisiyla, her seferinde tum paketlerin
-# indirilmesi gerekmektedir. Bu durum, build isleminin daha uzun surmesine neden olur.
+# Bu workflow ile "build-with-no-cache" workflow'unda kullanmadigimiz cache mekanizmasini kullanarak build islemini gerceklestirecegiz.
+# Boylece, her seferinde node_modules klasorunu yeniden olusturmak yerine, cache mekanizmasi sayesinde daha hizli bir build islemi gerceklestirecegiz.
 
 on:
   workflow_dispatch:
