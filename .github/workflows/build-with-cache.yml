@@ -87,4 +87,5 @@ jobs:
           key: ${{ needs.install-dependencies.outputs.deps-cache-key }}
 
       - name: Building
+        working-directory: app/node_modules
         run: npm run build
