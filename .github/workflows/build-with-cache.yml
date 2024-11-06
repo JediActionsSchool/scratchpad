@@ -86,6 +86,11 @@ jobs:
           path: app/node_modules
           key: ${{ needs.install-dependencies.outputs.deps-cache-key }}
 
+      - name: Install Depenencies
+        working-directory: app
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci
+
       - name: Building
         working-directory: app/node_modules
         run: npm run build
