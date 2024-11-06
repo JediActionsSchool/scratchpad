@@ -1,4 +1,5 @@
 name: Node.js CI - WITH CACHE
+run-name: Node.js CI - BUILD WITH CACHE
 
 # Bu workflow ile "build-with-no-cache" workflow'unda kullanmadigimiz cache mekanizmasini kullanarak build islemini gerceklestirecegiz.
 # Boylece, her seferinde node_modules klasorunu yeniden olusturmak yerine, cache mekanizmasi sayesinde daha hizli bir build islemi gerceklestirecegiz.
@@ -86,7 +87,9 @@ jobs:
           key: ${{ needs.install-dependencies.outputs.deps-cache-key }}
 
       - name: Testing
-        run: npm run test
+        run: | 
+          cd test
+          npm run test
 
       - name: Linting
         run: echo "Linting..."
