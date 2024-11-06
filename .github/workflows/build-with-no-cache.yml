@@ -1,4 +1,5 @@
 name: Node.js CI - WITH NO CACHE
+run-name: Node.js CI - BUILD WITH NO CACHE
 
 # Cache mekanizmasi olmaksizin calistirilan build isleminde, her seferinde node_modules klasoru silinir
 # ve npm ci komutu ile node_modules klasoru yeniden olusturulur. Dolayisiyla, her seferinde tum paketlerin
@@ -6,26 +7,55 @@ name: Node.js CI - WITH NO CACHE
 
 on:
   workflow_dispatch:
+    inputs:
+      node-version:
+        description: Node version
+        type: choice
+        options:
+          - 14.x
+          - 18.x
+          - 20.x
+          - 21.x
+          - latest
+        default: latest
+
   push:
 
 jobs:
-  build:
+  install-dependencies:
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: app
+
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Use Node.js Latest
+      - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: latest
+          node-version: ${{ inputs.node-version }}
 
-      - name: Install dependencies
-        run: |
-          cd app
-          npm ci
+      - name: Install Dependencies
+        run: npm ci
 
-      - name: Build
-        run: |
-          cd app
-          npm run build --if-present
+  build:
+    runs-on: ubuntu-latest
+    needs: install-dependencies
+    defaults:
+      run:
+        working-directory: app
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ inputs.node-version }}
+
+      - name: Building
+        run: npm run build
