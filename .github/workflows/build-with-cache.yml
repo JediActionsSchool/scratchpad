@@ -53,7 +53,7 @@ jobs:
       - name: Restore from Cached Dependencies
         id: cache
         uses: actions/cache@v3
-        if: ${{ github.event.inputs.use-cache }}
+        if: ${{ inputs.use-cache }}
         with:
           path: app/node_modules
           key: ${{ steps.cache-key.outputs.CACHE_KEY }}
