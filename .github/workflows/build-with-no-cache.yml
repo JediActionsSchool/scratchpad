@@ -51,6 +51,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ inputs.node-version }}
+      
+      - name: Install Depenencies
+        run: npm ci
 
       - name: Building
         working-directory: app/node_modules
