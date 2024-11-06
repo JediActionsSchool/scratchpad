@@ -42,7 +42,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ inputs.node-version }}
+          node-version: ${{ github.event.inputs['node-version'] }}
 
       - name: Calculate Cache Key
         id: cache-key
@@ -86,10 +86,10 @@ jobs:
           path: app/node_modules
           key: ${{ needs.install-dependencies.outputs.deps-cache-key }}
 
-      - name: Testing
-        run: | 
+      - name: Run Tests
+        run: |
           cd test
-          npm run test
+          npm test
 
       - name: Linting
         run: echo "Linting..."
