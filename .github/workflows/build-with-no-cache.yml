@@ -53,4 +53,5 @@ jobs:
           node-version: ${{ inputs.node-version }}
 
       - name: Building
+        working-directory: app
         run: npm run build
