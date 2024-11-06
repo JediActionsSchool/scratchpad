@@ -91,7 +91,7 @@ jobs:
         run: npm ci
 
       - name: Testing
-        run: npm test
+        run: npm run test
         env:
           PATH: test/
 
