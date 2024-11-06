@@ -86,14 +86,8 @@ jobs:
           path: app/node_modules
           key: ${{ needs.install-dependencies.outputs.deps-cache-key }}
 
-      - name: Install Dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci
-
       - name: Testing
         run: npm run test
-        env:
-          PATH: test/
 
       - name: Linting
         run: echo "Linting..."
