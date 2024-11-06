@@ -35,6 +35,7 @@ jobs:
           node-version: ${{ inputs.node-version }}
 
       - name: Install Dependencies
+        working-directory: app
         run: npm ci
 
   build:
