@@ -1,6 +1,6 @@
-// app.test.js
+// test/index.test.js
 const request = require("supertest");
-const { app, server } = require("./app");
+const { app, server } = require("../app"); // Update path to app.js
 
 afterAll(() => {
   server.close(); // Close server after tests
