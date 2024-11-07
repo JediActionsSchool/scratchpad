@@ -111,9 +111,10 @@ jobs:
         run: echo '${{ toJSON(steps.cache-dependencies.outputs) }}'
 
       - name: Install Dependencies
+        working-directory: app
         if: steps.cache-dependencies.outputs.cache-hit != true
         run: npm install
-        
+
       - name: Run Tests
         working-directory: app
         run: npx jest
