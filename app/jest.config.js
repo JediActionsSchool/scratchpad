@@ -2,5 +2,5 @@ module.exports = {
   testEnvironment: "node",
   collectCoverage: true,
   coverageReporters: ["lcov"],
-  testMatch: ["test/*.test.js"],
+  testMatch: ['**/?(*.)+(spec|test).[jt]s?(x)'],
 };
