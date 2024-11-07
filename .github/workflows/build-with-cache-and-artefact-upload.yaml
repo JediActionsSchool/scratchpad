@@ -42,7 +42,8 @@ jobs:
         run: npm run build
 
       - name: Run Server
-        run: node app.js
+        working-directory: app
+        run: node index.js
 
       - name: Run Tests
         run: npx jest
