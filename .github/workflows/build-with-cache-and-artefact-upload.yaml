@@ -35,8 +35,8 @@ jobs:
         run: npm run build
 
       - name: Run Tests
-        working-directory: app/test
-        run: npm test
+        working-directory: app
+        run: npm test -- --detectOpenHandles
 
       - name: Upload Code Coverage Report
         uses: actions/upload-artifact@v3
