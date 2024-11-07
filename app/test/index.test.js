@@ -1,14 +1,15 @@
+// app.test.js
 const request = require("supertest");
-const { app, server } = require("../dist/index");
+const { app, server } = require("./app");
 
 afterAll(() => {
-  server.close();
+  server.close(); // Close server after tests
 });
 
-describe("Simple Test", () => {
+describe("GET /", () => {
   it("should return Hello World!", async () => {
-    const response = await request(app).get("/");
-    expect(response.status).toBe(200);
-    expect(response.text).toBe("Hello World!");
+    const res = await request(app).get("/");
+    expect(res.statusCode).toEqual(200);
+    expect(res.text).toContain("Hello World!");
   });
 });

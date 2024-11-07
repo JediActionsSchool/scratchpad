@@ -1,7 +1,9 @@
 name: Caching and Artifacts
 run-name: Node.js CI - BUILD WITH CACHE AND ARTIFACTS
 
-on: [workflow_dispatch, push]
+on:
+  workflow_dispatch:
+  push:
 
 jobs:
   use-axios:
@@ -12,6 +14,11 @@ jobs:
 
       - name: Display Checkout Repo
         run: ls -la
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
 
       - name: Cache node modules
         id: cache-dependencies
@@ -34,9 +41,11 @@ jobs:
         working-directory: app
         run: npm run build
 
+      - name: Run Server
+        run: node app.js
+
       - name: Run Tests
-        working-directory: app
-        run: npm test -- --detectOpenHandles
+        run: npx jest
 
       - name: Upload Code Coverage Report
         uses: actions/upload-artifact@v3
