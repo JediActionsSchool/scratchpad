@@ -50,16 +50,14 @@ jobs:
         if: always()
         with:
           name: code-coverage
-          path: coverage
+          path: app/coverage
           retention-days: 10
 
       - name: Download Code Coverage
         uses: actions/download-artifact@v3
         with:
           name: code-coverage
-          path: coverage
-
-      - run: ls -a
+          path: code-coverage-report
 
       - run: ls -a
         working-directory: code-coverage-report
