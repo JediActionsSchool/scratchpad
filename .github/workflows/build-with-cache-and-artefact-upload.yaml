@@ -62,6 +62,9 @@ jobs:
       - run: ls -a
         working-directory: code-coverage-report
 
+      - name: Install Axios
+        run: npm install axios
+
       - name: Use Axios
         uses: actions/github-script@v6
         with:
