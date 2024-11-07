@@ -10,6 +10,9 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
+      - name: Display Checkout Repo
+        run: ls -la
+
       - name: Cache node modules
         id: cache-dependencies
         uses: actions/cache@v3
@@ -28,7 +31,7 @@ jobs:
 
       - name: Run Tests
         run: npm test
-        
+
       - name: Upload Code Coverage Report
         uses: actions/upload-artifact@v3
         if: always()
