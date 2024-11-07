@@ -105,7 +105,7 @@ jobs:
       - name: Build Project
         run: npm run build
 
-  test:
+  test-and-upload-download-artefact:
     runs-on: ubuntu-latest
     needs: [build]
     steps:
@@ -130,7 +130,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-npm-cache-
             ${{ runner.os }}-
-          
+
       - name: Install Dependencies
         working-directory: app
         if: steps.cache-dependencies.outputs.cache-hit != true
@@ -147,61 +147,61 @@ jobs:
       - name: Display Cache Output
         run: echo '${{ toJSON(steps.cache-dependencies.outputs) }}'
 
-  # upload-and-download-artefact:
-  #   runs-on: ubuntu-latest
-  #   needs: [test]
-  #   steps:
-  #     - name: Checkout Code
-  #       uses: actions/checkout@v4
+      - name: Upload Code Coverage Report
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: code-coverage
+          path: app/coverage
+          retention-days: 10
 
-  #     - name: Display Checkout Repo
-  #       working-directory: app/
-  #       run: ls -la >> $GITHUB_STEP_SUMMARY
+      - name: Download Code Coverage
+        uses: actions/download-artifact@v3
+        with:
+          name: code-coverage
+          path: code-coverage-report
 
-  #     - name: Setup Node
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: "18.x"
+      - run: ls -a
+        working-directory: code-coverage-report
 
-  #     - name: Cache node modules
-  #       id: cache-dependencies
-  #       uses: actions/cache@v3
-  #       with:
-  #         path: ~/.npm
-  #         key: ${{ runner.os }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
-  #         restore-keys: |
-  #           ${{ runner.os }}-npm-cache-
-  #           ${{ runner.os }}-
+  axios:
+    runs-on: ubuntu-latest
+    needs: [test-and-upload-download-artefact]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-  #     - name: Install Dependencies
-  #       working-directory: app
-  #       if: steps.cache-dependencies.outputs.cache-hit != true
-  #       run: npm install
+      - name: Display Checkout Repo
+        working-directory: app/
+        run: ls -la >> $GITHUB_STEP_SUMMARY
 
-  #     - name: Upload Code Coverage Report
-  #       uses: actions/upload-artifact@v3
-  #       if: always()
-  #       with:
-  #         name: code-coverage
-  #         path: app/coverage
-  #         retention-days: 10
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
 
-  #     - name: Download Code Coverage
-  #       uses: actions/download-artifact@v3
-  #       with:
-  #         name: code-coverage
-  #         path: code-coverage-report
+      - name: Cache node modules
+        id: cache-dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-cache-
+            ${{ runner.os }}-
 
-  #     - run: ls -a
-  #       working-directory: code-coverage-report
+      - name: Install Dependencies
+        working-directory: app
+        if: steps.cache-dependencies.outputs.cache-hit != true
+        run: npm install
 
-  #     - name: Install Axios
-  #       run: npm install axios
+      - name: Install Axios
+        run: npm install axios
 
-  #     - name: Use Axios
-  #       uses: actions/github-script@v6
-  #       with:
-  #         script: |
-  #           const axios = require('axios');
-  #           const res = await axios('https://icanhazdadjoke.com/', { headers: { Accept: 'text/plain' } })
-  #           console.log(res.data)
+      - name: Use Axios
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const axios = require('axios');
+            const res = await axios('https://icanhazdadjoke.com/', { headers: { Accept: 'text/plain' } })
+            console.log(res.data)
