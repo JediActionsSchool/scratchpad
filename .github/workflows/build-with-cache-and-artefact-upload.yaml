@@ -1,4 +1,4 @@
-name: Caching and Artifacts
+name: BUILD WITH CACHE AND UPLOAD/DOWNLOAD ARTIFACTS
 run-name: Node.js CI - BUILD WITH CACHE AND ARTIFACTS
 
 on:
