@@ -6,31 +6,53 @@ on:
   push:
 
 jobs:
-  install-dependencies:
+  cache:
     runs-on: ubuntu-latest
 
     defaults:
       run:
         working-directory: app
 
+    outputs:
+      deps-cache-key: ${{ steps.cache-key.outputs.CACHE_KEY}}
+
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: "18.x"
 
-      - name: Cache node modules
+      - name: Calculate Cache Key
+        id: cache-key
+        run: |
+          echo "CACHE_KEY=${{ runner.os }}-npm-${{ hashFiles('app/package-lock.json')}}" >> $GITHUB_OUTPUT
+          echo "CACHE_KEY=${{ runner.os }}-npm-${{ hashFiles('app/package-lock.json')}}" >> $GITHUB_STEP_SUMMARY
+
+  install-dependencies:
+    runs-on: ubuntu-latest
+    needs: cache
+    defaults:
+      run:
+        working-directory: app
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+
+      - name: Cache Node Modules
         id: cache-dependencies
         uses: actions/cache@v3
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-npm-cache-
-            ${{ runner.os }}-
+          key: ${{ needs.cache.outputs.deps-cache-key }}
 
       - name: Display Cache Output
         run: echo '${{ toJSON(steps.cache-dependencies.outputs) }}' >> $GITHUB_STEP_SUMMARY
@@ -44,14 +66,14 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    needs: install-dependencies
+    needs: [cache, install-dependencies]
     defaults:
       run:
         working-directory: app
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Display Checkout Repo
         run: ls -la
@@ -61,15 +83,12 @@ jobs:
         with:
           node-version: "18.x"
 
-      - name: Cache node modules
+      - name: Cache Node Modules
         id: cache-dependencies
         uses: actions/cache@v3
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-npm-cache-
-            ${{ runner.os }}-
+          key: ${{ needs.cache.outputs.deps-cache-key }}
 
       - name: Display Cache Output
         run: echo '${{ toJSON(steps.cache-dependencies.outputs) }}'
@@ -83,10 +102,10 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    needs: build
+    needs: [cache, install-dependencies, build]
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Display Checkout Repo
         working-directory: app/
@@ -97,15 +116,12 @@ jobs:
         with:
           node-version: "18.x"
 
-      - name: Cache node modules
+      - name: Cache Node Modules
         id: cache-dependencies
         uses: actions/cache@v3
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-npm-cache-
-            ${{ runner.os }}-
+          key: ${{ needs.cache.outputs.deps-cache-key }}
 
       - name: Display Cache Output
         run: echo '${{ toJSON(steps.cache-dependencies.outputs) }}'
@@ -118,6 +134,29 @@ jobs:
       - name: Run Tests
         working-directory: app
         run: npx jest
+
+  upload-and-download-artefact:
+    runs-on: ubuntu-latest
+    needs: [cache, install-dependencies, build, test]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Display Checkout Repo
+        working-directory: app/
+        run: ls -la >> $GITHUB_STEP_SUMMARY
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+
+      - name: Cache Node Modules
+        id: cache-dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ needs.cache.outputs.deps-cache-key }}
 
       - name: Upload Code Coverage Report
         uses: actions/upload-artifact@v3
