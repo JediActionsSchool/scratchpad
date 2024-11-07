@@ -145,7 +145,7 @@ jobs:
         run: npx jest
 
       - name: Display Cache Output
-        run: echo '${{ toJSON(steps.test.outputs) }}' >> $GITHUB_STEP_SUMMARY
+        run: echo '${{ toJSON(steps.cache-dependencies.outputs) }}'
 
   # upload-and-download-artefact:
   #   runs-on: ubuntu-latest
