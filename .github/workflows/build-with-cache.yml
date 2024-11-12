@@ -1,5 +1,5 @@
-name: Node.js CI - WITH CACHE
-run-name: Node.js CI - BUILD WITH CACHE
+name: 01-BUILD WITH CACHE
+run-name: BUILD WITH CACHE
 
 # Bu workflow ile "build-with-no-cache" workflow'unda kullanmadigimiz cache mekanizmasini kullanarak build islemini gerceklestirecegiz.
 # Boylece, her seferinde node_modules klasorunu yeniden olusturmak yerine, cache mekanizmasi sayesinde daha hizli bir build islemi gerceklestirecegiz.

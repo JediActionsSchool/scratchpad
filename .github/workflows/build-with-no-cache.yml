@@ -1,5 +1,5 @@
-name: Node.js CI - WITH NO CACHE
-run-name: Node.js CI - BUILD WITH NO CACHE
+name: 00-BUILD WITHOUT CACHE
+run-name: BUILD WITHOUT CACHE
 
 # Cache mekanizmasi olmaksizin calistirilan build isleminde, her seferinde node_modules klasoru silinir
 # ve npm ci komutu ile node_modules klasoru yeniden olusturulur. Dolayisiyla, her seferinde tum paketlerin
