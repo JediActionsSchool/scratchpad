@@ -1,5 +1,5 @@
-name: 02-BUILD WITH CACHE AND UPLOAD/DOWNLOAD ARTIFACTS
-run-name: Node.js CI - BUILD WITH CACHE AND UPLOAD/DOWNLOAD ARTIFACTS
+name: 03-BUILD WITH CACHE AND UPLOAD/DOWNLOAD ARTIFACTS
+run-name: BUILD WITH CACHE AND UPLOAD/DOWNLOAD ARTIFACTS
 
 on:
   workflow_dispatch:
@@ -80,7 +80,7 @@ jobs:
       - name: Build Project
         run: npm run build
 
-  test-and-upload-download-artefact:
+  test-and-upload-artefact:
     runs-on: ubuntu-latest
     needs: [build]
     steps:
@@ -130,18 +130,23 @@ jobs:
           path: app/coverage
           retention-days: 10
 
-      - name: Download Code Coverage
-        uses: actions/download-artifact@v3
-        with:
-          name: code-coverage
-          path: code-coverage-report
+  download-artefact:
+    runs-on: ubuntu-latest
+    needs: [test-and-upload-artefact]
+    steps:
 
-      - run: ls -a
-        working-directory: code-coverage-report
+    - name: Download Code Coverage
+      uses: actions/download-artifact@v3
+      with:
+        name: code-coverage
+        path: code-coverage-report
+
+    - run: ls -a
+      working-directory: code-coverage-report
 
   axios:
     runs-on: ubuntu-latest
-    needs: [test-and-upload-download-artefact]
+    needs: [download-artefact]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
