@@ -130,9 +130,6 @@ jobs:
           path: app/coverage
           retention-days: 10
 
-      - run: ls -a
-        working-directory: code-coverage-report
-
   axios:
     runs-on: ubuntu-latest
     needs: [test-and-upload-download-artefact]
