@@ -1,5 +1,5 @@
-name: 03-BUILD WITH CACHE AND UPLOAD/DOWNLOAD ARTIFACTS
-run-name: BUILD WITH CACHE AND UPLOAD/DOWNLOAD ARTIFACTS
+name: 04-BUILD WITH CACHE AND UPLOAD/DOWNLOAD/DELETE ARTIFACTS
+run-name: BUILD WITH CACHE AND UPLOAD/DOWNLOAD/DELETE ARTIFACTS
 
 on:
   workflow_dispatch:
@@ -154,7 +154,7 @@ jobs:
 
   axios:
     runs-on: ubuntu-latest
-    needs: [download-artefact]
+    needs: [delete-artefact]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
