@@ -14,7 +14,7 @@ jobs:
 
         steps:
             - name: Generate Random Number
-              id: generate-number
+              id: generate-random-number
               run: |
                 echo "Generating Random Number..."
                 random_number=$(shuf -i 1-100 -n 1)
@@ -26,10 +26,34 @@ jobs:
               id: is-even
               run: |
                 echo "Checking If Random Number Is Even..."
-                random_number=${{ steps.generate-number.outputs.random-number }}
+                random_number=${{ steps.generate-random-number.outputs.random-number }}
                 is_even=$((random_number % 2 == 0))
-                echo "Is Random Number Even? $is_even"
                 echo "is-even=$is_even" >> "$GITHUB_OUTPUT"
-                echo "### Is Random Number Even? $is_even" >> "$GITHUB_STEP_SUMMARY"
+
+    consumer-of-odd-random-number:
+        runs-on: ubuntu-latest
+        needs: [random-number-generator]
+        if: ${{ needs.random-number-generator.outputs.is-even }} == 0
+
+        steps:
+            - name: Display Random Number
+              run: |
+                echo "Displaying If Random Number Is Odd..."
+                random_number=${{ needs.random-number-generator.outputs.random-number }}
+                echo "The Random Number: $random_number is odd"
+                echo "### The andom Number: $random_number is odd" >> "$GITHUB_STEP_SUMMARY"
+
+    consumer-of-even-random-number:
+        runs-on: ubuntu-latest
+        needs: [random-number-generator]
+        if: ${{ needs.random-number-generator.outputs.is-even }} == 1
+
+        steps:
+          - name: Display Random Number Is Even
+            run: |
+              echo "Displaying If Random Number Is Even..."
+              random_number=${{ needs.random-number-generator.outputs.random-number }}
+              echo "The Random Number: $random_number is even"
+              echo "### Is Random Number Even: $random_number" >> "$GITHUB_STEP_SUMMARY"
 
 
