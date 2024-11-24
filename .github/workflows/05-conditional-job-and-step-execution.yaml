@@ -15,10 +15,12 @@ jobs:
         steps:
             - name: Generate Random Number
               id: generate-number
-              run:
+              run: |
                 echo "Generating Random Number..."
-                echo "random-number=$(echo $RANDOM)" >> "$GITHUB_OUTPUT"
-                echo "random-number" >> "$GITHUB_STEP_SUMMARY"
+                random_number=$(shuf -i 1-100 -n 1)
+                echo "Generated Random Number: $random_number"
+                echo "random-number=$random_number" >> "$GITHUB_OUTPUT"
+                echo "### Generated Random Number: $random_number" >> "$GITHUB_STEP_SUMMARY"
 
 
 
