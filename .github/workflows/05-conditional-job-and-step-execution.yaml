@@ -33,7 +33,7 @@ jobs:
     consumer-of-odd-random-number:
         runs-on: ubuntu-latest
         needs: [random-number-generator]
-        if: ${{ needs.random-number-generator.outputs.is-even }} == 0
+        if: ${{ needs.random-number-generator.outputs.is-even == 0}}
 
         steps:
             - name: Display Random Number
@@ -41,7 +41,7 @@ jobs:
                 echo "Displaying If Random Number Is Odd..."
                 random_number=${{ needs.random-number-generator.outputs.random-number }}
                 echo "The Random Number: $random_number is odd"
-                echo "### The andom Number: $random_number is odd" >> "$GITHUB_STEP_SUMMARY"
+                echo "### The random Number $random_number is odd" >> "$GITHUB_STEP_SUMMARY"
 
     consumer-of-even-random-number:
         runs-on: ubuntu-latest
@@ -54,6 +54,6 @@ jobs:
               echo "Displaying If Random Number Is Even..."
               random_number=${{ needs.random-number-generator.outputs.random-number }}
               echo "The Random Number: $random_number is even"
-              echo "### Is Random Number Even: $random_number" >> "$GITHUB_STEP_SUMMARY"
+              echo "### The Random Number $random_number Is Even" >> "$GITHUB_STEP_SUMMARY"
 
 
