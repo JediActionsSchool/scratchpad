@@ -22,35 +22,14 @@ jobs:
                 echo "random-number=$random_number" >> "$GITHUB_OUTPUT"
                 echo "### Generated Random Number: $random_number" >> "$GITHUB_STEP_SUMMARY"
 
+            - name: Check If Random Number Is Even
+              id: is-even
+              run: |
+                echo "Checking If Random Number Is Even..."
+                random_number=${{ steps.generate-number.outputs.random-number }}
+                is_even=$((random_number % 2 == 0))
+                echo "Is Random Number Even? $is_even"
+                echo "is-even=$is_even" >> "$GITHUB_OUTPUT"
+                echo "### Is Random Number Even? $is_even" >> "$GITHUB_STEP_SUMMARY"
 
 
-
-
-
-            # - name: Generate Random Number
-            #   id: generate-random-number
-            #   run: echo "::set-output name=random-number::$(shuf -i 1-100 -n 1)"
-            #   shell: bash
-
-            # - name: Display Random Number
-            #   run: 
-            #     echo "Random Number: ${{ steps.random-number.outputs.random-number }}"
-
-            # - name: Check If Random Number Is Even
-            #   id: is-even
-            #   run: |
-            #       if [ $(( ${{ steps.random-number.outputs.random-number }} % 2 )) -eq 0 ]; then
-            #           echo "::set-output name=is-even::true"
-            #       else
-            #           echo "::set-output name=is-even::false"
-            #       fi
-            #   shell: bash
-
-            # - name: Display If Random Number Is Even
-            #   run: echo "Is Random Number Even: ${{ steps.is-even.outputs.is-even }}"
-            #   if: steps.is-even.outputs.is-even == 'true'
-
-            # - name: Display If Random Number Is Odd
-            #   run: 
-            #     echo "Is Random Number Odd: ${{ steps.is-even.outputs.is-even }}"
-            #   if: steps.is-even.outputs.is-even == 'false'
