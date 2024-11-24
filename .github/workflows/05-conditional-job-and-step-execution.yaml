@@ -16,7 +16,8 @@ jobs:
             - name: Generate Random Number
               id: generate-number
               run:
-                echo "::set-output name=RANDOM::$(shuf -i 1-100 -n 1)"
+                echo "Generating Random Number..."
+                echo "number=$(echo $RANDOM)" >> "$GITHUB_OUTPUT"
 
 
 
