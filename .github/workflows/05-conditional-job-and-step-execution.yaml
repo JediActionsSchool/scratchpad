@@ -18,7 +18,7 @@ jobs:
               run:
                 echo "Generating Random Number...\n"
                 echo "random-number=$(echo $RANDOM)" >> "$GITHUB_OUTPUT"
-                echo "$RANDOM" >> "$GITHUB_STEP_SUMMARY"
+                echo "$random-number" >> "$GITHUB_STEP_SUMMARY"
 
 
 
