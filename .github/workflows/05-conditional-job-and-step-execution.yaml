@@ -1,0 +1,52 @@
+name: 05-RANDOM NUMBER GENERATOR WITH CONDITIONAL JOB AND STEP EXECUTION
+run-name: RANDOM NUMBER GENERATOR WITH CONDITIONAL JOB AND STEP EXECUTION
+
+on:
+    workflow_dispatch:
+    push:
+
+jobs:
+    random-number-generator:
+        runs-on: ubuntu-latest
+        outputs:
+            random-number: ${{ steps.generate-random-number.outputs.random-number }}
+            is-even: ${{ steps.is-even.outputs.is-even }}
+
+        steps:
+            - name: Generate Random Number
+              id: generate-number
+              run:
+                echo "::set-output name=RANDOM::$(shuf -i 1-100 -n 1)"
+
+
+
+
+
+
+            # - name: Generate Random Number
+            #   id: generate-random-number
+            #   run: echo "::set-output name=random-number::$(shuf -i 1-100 -n 1)"
+            #   shell: bash
+
+            # - name: Display Random Number
+            #   run: 
+            #     echo "Random Number: ${{ steps.random-number.outputs.random-number }}"
+
+            # - name: Check If Random Number Is Even
+            #   id: is-even
+            #   run: |
+            #       if [ $(( ${{ steps.random-number.outputs.random-number }} % 2 )) -eq 0 ]; then
+            #           echo "::set-output name=is-even::true"
+            #       else
+            #           echo "::set-output name=is-even::false"
+            #       fi
+            #   shell: bash
+
+            # - name: Display If Random Number Is Even
+            #   run: echo "Is Random Number Even: ${{ steps.is-even.outputs.is-even }}"
+            #   if: steps.is-even.outputs.is-even == 'true'
+
+            # - name: Display If Random Number Is Odd
+            #   run: 
+            #     echo "Is Random Number Odd: ${{ steps.is-even.outputs.is-even }}"
+            #   if: steps.is-even.outputs.is-even == 'false'
