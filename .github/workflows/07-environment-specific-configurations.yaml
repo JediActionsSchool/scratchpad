@@ -1,0 +1,27 @@
+# Environment-specific configurations in GitHub Actions allows you to define different settings or secrets for
+# different environments. This is useful when you have multiple environments such as development, testing,
+# and production, each requiring distinct configurations or secrets.
+
+name: 07-Environment-Specific Configurations | Live-Dev Deployment
+run-name: Environment Specific Configurations | Live-Dev Deployment
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - ci/*
+
+jobs:
+  live-environment-deployment:
+    runs-on: ubuntu-latest
+    environment: Live
+    steps:
+      - run: echo "${{ vars.ENV_VAL }}"  >> $GITHUB_STEP_SUMMARY
+
+  dev-environment-deployment:
+    runs-on: ubuntu-latest
+    environment: Dev
+    steps:
+      - run: echo "${{ vars.ENV_VAL }}"  >> $GITHUB_STEP_SUMMARY
