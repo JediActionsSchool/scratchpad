@@ -13,6 +13,8 @@ on:
     branches:
       - ci/*
 
+  workflow_dispatch:
+
 jobs:
   live-environment-deployment:
     runs-on: ubuntu-latest
