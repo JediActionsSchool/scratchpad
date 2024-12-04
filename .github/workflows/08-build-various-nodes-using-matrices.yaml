@@ -42,41 +42,47 @@ jobs:
 
       - name: Display Checkout Directory
         run: ${{ matrix.os == 'windows-latest' && 'dir' || 'ls -la' }}
-#   build:
-#     runs-on: ubuntu-latest
-#     needs: [install-dependencies]
-#     defaults:
-#       run:
-#         working-directory: app
 
-#     steps:
-#       - name: Checkout Code
-#         uses: actions/checkout@v4
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node: [16, 18]
 
-#       - name: Display Checkout Directory
-#         run: ${{ matrix.os == 'windows-latest' && 'dir' || 'ls -la' }}
+    runs-on: ${{ matrix.os }}
+    needs: [install-dependencies]
+    defaults:
+      run:
+        working-directory: app
 
-#       - name: Setup Node
-#         uses: actions/setup-node@v3
-#         with:
-#           node-version: "18.x"
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-#       - name: Cache node modules
-#         id: cache-dependencies
-#         uses: actions/cache@v3
-#         with:
-#           path: ~/.npm
-#           key: ${{ runner.os }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
-#           restore-keys: |
-#             ${{ runner.os }}-npm-cache-
-#             ${{ runner.os }}-
+      - name: Display Checkout Directory
+        run: ${{ matrix.os == 'windows-latest' && 'dir' || 'ls -la' }}
 
-#       - name: Display Cache Output
-#         run: echo '${{ toJSON(steps.cache-dependencies.outputs) }}'
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "${{ matrix.node }}"
 
-#       - name: Install Dependencies
-#         if: steps.cache-dependencies.outputs.cache-hit != true
-#         run: npm install
+      - name: Cache node modules
+        id: cache-dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-cache-${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-cache-${{ matrix.node }}
+            ${{ runner.os }}-${{ matrix.node }}
 
-#       - name: Build Project
-#         run: npm run build
+      - name: Display Cache Output
+        run: echo '${{ toJSON(steps.cache-dependencies.outputs) }}'
+
+      - name: Install Dependencies
+        if: steps.cache-dependencies.outputs.cache-hit != true
+        run: npm install
+
+      - name: Build Project
+        run: npm run build
