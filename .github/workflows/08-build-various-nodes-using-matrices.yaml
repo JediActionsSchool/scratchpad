@@ -101,7 +101,7 @@ jobs:
 
       - name: Display Checkout Directory
         working-directory: app/
-        run: ${{ matrix.os == 'windows-latest' && 'dir' || 'ls -la >> $GITHUB_STEP_SUMMARY' }}
+        run: ${{ matrix.os == 'windows-latest >> $GITHUB_STEP_SUMMARY' && 'dir' || 'ls -la >> $GITHUB_STEP_SUMMARY' }}
 
       - name: Setup Node
         uses: actions/setup-node@v3
@@ -141,19 +141,21 @@ jobs:
           name: code-coverage-${{ matrix.os }}-${{ matrix.node }}
           path: app/coverage
           retention-days: 1
-#   download-artefact:
-#     runs-on: ubuntu-latest
-#     needs: [test-and-upload-artefact]
-#     steps:
-#       - name: Download Artefact
-#         uses: actions/download-artifact@v3
-#         with:
-#           name: code-coverage
-#           path: code-coverage-report
+  download-artefact:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node: [16, 18]
 
-#       - run: ls -a
-#         working-directory: code-coverage-report
+    runs-on: ${{ matrix.os }}
+    needs: [test-and-upload-artefact]
 
+    steps:
+      - name: Download Artefact
+        uses: actions/download-artifact@v3
+        with:
+          name: code-coverage--${{ matrix.os }}-${{ matrix.node }}
+          path: code-coverage-report
 #   delete-artefact:
 #     runs-on: ubuntu-latest
 #     needs: [download-artefact]
