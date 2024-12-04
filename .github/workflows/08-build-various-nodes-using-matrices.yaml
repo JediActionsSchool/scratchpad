@@ -43,6 +43,18 @@ jobs:
       - name: Display Checkout Directory
         run: ${{ matrix.os == 'windows-latest' && 'dir' || 'ls -la' }}
 
+      - name: List Files in Directory
+        run: |
+          if [ "${{ runner.os }}" == "Windows" ]; then
+            echo "Listing files with dir:"
+            echo "Files in GITHUB_WORKSPACE:"
+            dir $GITHUB_WORKSPACE
+            dir
+          else
+            echo "Listing files with ls -la:"
+            ls -la
+          fi
+
   build:
     strategy:
       matrix:
