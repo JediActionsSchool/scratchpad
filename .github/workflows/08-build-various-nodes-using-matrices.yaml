@@ -101,7 +101,7 @@ jobs:
 
       - name: Display Checkout Directory
         working-directory: app/
-        run: ${{ matrix.os == 'windows-latest >> $GITHUB_STEP_SUMMARY' && 'dir' || 'ls -la >> $GITHUB_STEP_SUMMARY' }}
+        run: ${{ matrix.os == 'windows-latest' && 'dir' || 'ls -la' }}
 
       - name: Setup Node
         uses: actions/setup-node@v3
