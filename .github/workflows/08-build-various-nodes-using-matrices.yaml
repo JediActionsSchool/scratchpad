@@ -1,4 +1,4 @@
-name: 08-Working with Matrices
+name: 08-WORKIN WITH MATRICES
 run-name: Working with Matrices
 
 on: [push, workflow_dispatch]
@@ -42,18 +42,6 @@ jobs:
 
       - name: Display Checkout Directory
         run: ${{ matrix.os == 'windows-latest' && 'dir' || 'ls -la' }}
-
-      - name: List Files in Directory
-        run: |
-            if ($Env:OS -eq "Windows_NT") {
-            Write-Host "Listing files with dir:"
-            Write-Host "Files in GITHUB_WORKSPACE:"
-            dir $Env:GITHUB_WORKSPACE
-            dir
-            } else {
-            Write-Host "Listing files with ls -la:"
-            ls -la
-            }
 
   build:
     strategy:
