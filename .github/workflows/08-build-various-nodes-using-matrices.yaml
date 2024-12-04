@@ -1,0 +1,83 @@
+name: 08-Working with Matrices
+run-name: Working with Matrices
+
+on: [push, workflow_dispatch]
+jobs:
+  install-dependencies:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node: [14, 16]
+
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: app
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Cache node modules
+        id: cache-dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-cache-${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-cache-${{ matrix.node }}
+            ${{ runner.os }}-${{ matrix.node }}
+
+      - name: Display Cache Output
+        run: echo '${{ toJSON(steps.cache-dependencies.outputs) }}' >> $GITHUB_STEP_SUMMARY
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Install Dependencies
+        if: steps.cache-dependencies.outputs.cache-hit != true
+        run: npm install
+
+      - name: Display Checkout Directory
+        run: ls -la
+
+  build:
+    runs-on: ubuntu-latest
+    needs: [install-dependencies]
+    defaults:
+      run:
+        working-directory: app
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Display Checkout Repo
+        run: ls -la
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+
+      - name: Cache node modules
+        id: cache-dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-cache-
+            ${{ runner.os }}-
+
+      - name: Display Cache Output
+        run: echo '${{ toJSON(steps.cache-dependencies.outputs) }}'
+
+      - name: Install Dependencies
+        if: steps.cache-dependencies.outputs.cache-hit != true
+        run: npm install
+
+      - name: Build Project
+        run: npm run build
