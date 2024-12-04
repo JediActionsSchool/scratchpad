@@ -45,15 +45,15 @@ jobs:
 
       - name: List Files in Directory
         run: |
-          if [ ${{ runner.os }} == "Windows" ]; then
-            echo "Listing files with dir:"
+            if ($Env:OS -eq "Windows_NT") {
+            Write-Host "Listing files with dir:"
+            Write-Host "Files in GITHUB_WORKSPACE:"
+            dir $Env:GITHUB_WORKSPACE
             dir
-            echo "Files in GITHUB_WORKSPACE:"
-            dir $GITHUB_WORKSPACE
-          else
-            echo "Listing files with ls -la:"
+            } else {
+            Write-Host "Listing files with ls -la:"
             ls -la
-          fi
+            }
 
   build:
     strategy:
