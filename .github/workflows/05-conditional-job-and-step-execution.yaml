@@ -51,6 +51,7 @@ jobs:
     steps:
       - name: Display Random Number Is Even
         run: |
+          echo "Dummy comment"
           echo "Displaying If Random Number Is Even..."
           random_number=${{ needs.random-number-generator.outputs.random-number }}
           echo "The Random Number: $random_number is even"
