@@ -123,7 +123,7 @@ jobs:
         run: echo '${{ toJSON(steps.cache-dependencies.outputs) }}'
 
       - name: Upload Artefact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1
         if: always()
         with:
           name: code-coverage
