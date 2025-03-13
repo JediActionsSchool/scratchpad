@@ -7,7 +7,7 @@ on:
 
 jobs:
   random-number-generator:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     outputs:
       random-number: ${{ steps.generate-random-number.outputs.random-number }}
       is-even: ${{ steps.is-even.outputs.is-even }}
@@ -31,7 +31,7 @@ jobs:
           echo "is-even=$is_even" >> "$GITHUB_OUTPUT"
 
   consumer-of-odd-random-number:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: [random-number-generator]
     if: ${{ needs.random-number-generator.outputs.is-even == 0}}
 
@@ -44,7 +44,7 @@ jobs:
           echo "### The random Number $random_number is odd" >> "$GITHUB_STEP_SUMMARY"
 
   consumer-of-even-random-number:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: [random-number-generator]
     if: ${{ needs.random-number-generator.outputs.is-even == 1 }}
 
