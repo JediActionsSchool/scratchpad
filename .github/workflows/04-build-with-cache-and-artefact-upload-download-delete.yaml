@@ -148,7 +148,7 @@ jobs:
     needs: [download-artefact]
     steps:
         - name: Delete Artefact
-          uses: geekyeggo/delete-artifact@v2
+          uses: geekyeggo/delete-artifact@f275313e70c08f6120db482d7a6b98377786765b
           with:
             name: code-coverage
 
