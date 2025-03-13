@@ -7,7 +7,7 @@ on:
 
 jobs:
   install-dependencies:
-    runs-on: ubuntu-latest
+    runs-on: raspbberypi5
     defaults:
       run:
         working-directory: app
@@ -42,7 +42,7 @@ jobs:
         run: ls -la
 
   build:
-    runs-on: ubuntu-latest
+    runs-on: raspbberypi5
     needs: [install-dependencies]
     defaults:
       run:
@@ -81,7 +81,7 @@ jobs:
         run: npm run build
 
   test-and-upload-artefact:
-    runs-on: ubuntu-latest
+    runs-on: raspbberypi5
     needs: [build]
     steps:
       - name: Checkout Code
@@ -131,7 +131,7 @@ jobs:
           retention-days: 10
 
   download-artefact:
-    runs-on: ubuntu-latest
+    runs-on: raspbberypi5
     needs: [test-and-upload-artefact]
     steps:
       - name: Download Artefact
@@ -144,7 +144,7 @@ jobs:
         working-directory: code-coverage-report
 
   delete-artefact:
-    runs-on: ubuntu-latest
+    runs-on: raspbberypi5
     needs: [download-artefact]
     steps:
         - name: Delete Artefact
@@ -153,7 +153,7 @@ jobs:
             name: code-coverage
 
   axios:
-    runs-on: ubuntu-latest
+    runs-on: raspbberypi5
     needs: [delete-artefact]
     steps:
       - name: Checkout Code
