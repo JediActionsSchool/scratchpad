@@ -135,7 +135,7 @@ jobs:
     needs: [test-and-upload-artefact]
     steps:
       - name: Download Artefact
-        uses: actions/download-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1
+        uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806
         with:
           name: code-coverage
           path: code-coverage-report
